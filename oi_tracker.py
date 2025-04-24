@@ -1,4 +1,5 @@
-import time, requests
+import time
+import requests
 from nsetools import Nse
 import gspread
 from google.oauth2.service_account import Credentials
@@ -19,9 +20,24 @@ def get_symbols():
     return nse.get_stocks_in_index("NIFTY 50")
 
 def fetch_price(symbol):
-    # get last traded price
-    quote = nse.get_quote(symbol)               # :contentReference[oaicite:1]{index=1}
-    return quote['lastPrice']
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "en-IN,en;q=0.9",
+        "Referer": "https://www.nseindia.com/"
+    }
+
+    session = requests.Session()
+    # Prime the session with cookies
+    session.get("https://www.nseindia.com", headers=headers, timeout=5)
+
+    # Hit the quote-equity endpoint
+    url = f"https://www.nseindia.com/api/quote-equity?symbol={symbol}"
+    resp = session.get(url, headers=headers, timeout=5)
+    resp.raise_for_status()
+
+    data = resp.json()
+    # priceInfo.lastPrice is where the LTP lives
+    return data.get("priceInfo", {}).get("lastPrice", 0)
 
 def fetch_option_chain(symbol):
     # needs the NSE website cookies/headers
