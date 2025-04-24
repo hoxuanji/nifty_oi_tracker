@@ -7,7 +7,7 @@ from google.oauth2.service_account import Credentials
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 creds  = Credentials.from_service_account_file('service-account.json', scopes=SCOPES)
 gc     = gspread.authorize(creds)
-SHEET_ID = "B6q7ssbPzkXNCm73edXR8lpHm9aTco6URwMGhERZe-E"
+SHEET_ID = "1B6q7ssbPzkXNCm73edXR8lpHm9aTco6URwMGhERZe-E"
 sheet    = gc.open_by_key(SHEET_ID).sheet1
 
 # ── 2) NSE clients & constants ────────────────────────────────────
