@@ -4,10 +4,11 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # ── 1) Google Sheets setup ────────────────────────────────────────
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 creds  = Credentials.from_service_account_file('service-account.json', scopes=SCOPES)
 gc     = gspread.authorize(creds)
-sheet  = gc.open("Nifty50_OI_Tracker").sheet1
+sheet_id = "B6q7ssbPzkXNCm73edXR8lpHm9aTco6URwMGhERZe-E"
+sheet    = gc.open_by_key(SHEET_ID).sheet1
 
 # ── 2) NSE clients & constants ────────────────────────────────────
 nse    = Nse()
