@@ -1,11 +1,11 @@
 name: OI Tracker
 
-on:
-  schedule:
-    # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
-    - cron: "45 3 * * *"
-    # update OI every 5 minutes (all day)
-    - cron: "*/5 * * * *"
+# on:
+#   schedule:
+#     # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
+#     - cron: "45 3 * * *"
+#     # update OI every 5 minutes (all day)
+#     - cron: "*/5 * * * *"
 
 jobs:
   run:
