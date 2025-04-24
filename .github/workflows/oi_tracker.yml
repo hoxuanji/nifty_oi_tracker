@@ -1,48 +1,48 @@
-name: OI Tracker
+# name: OI Tracker
 
-on:
-  schedule:
-    # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
-    - cron: "45 3 * * *"
-    # update OI every 5 minutes (all day)
-    - cron: "*/5 * * * *"
-  # (optional) allow manual runs for testing
-  workflow_dispatch: {}
+# on:
+#   schedule:
+#     # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
+#     - cron: "45 3 * * *"
+#     # update OI every 5 minutes (all day)
+#     - cron: "*/5 * * * *"
+#   # (optional) allow manual runs for testing
+#   workflow_dispatch: {}
 
-jobs:
-  run:
-    runs-on: ubuntu-latest
+# jobs:
+#   run:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.x"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
 
-      - name: Configure service account
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          echo "$GCP_SA_KEY" > service-account.json
+#       - name: Configure service account
+#         env:
+#           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+#         run: |
+#           echo "$GCP_SA_KEY" > service-account.json
 
-      - name: Determine task
-        id: pick
-        run: |
-          # Compute current UTC time
-          TIMESTAMP=$(date --utc +'%H:%M')
-          echo "Current UTC time is $TIMESTAMP"
-          if [ "$TIMESTAMP" = "03:45" ]; then
-            echo "mode=reset" >> $GITHUB_OUTPUT
-          else
-            echo "mode=update" >> $GITHUB_OUTPUT
-          fi
+#       - name: Determine task
+#         id: pick
+#         run: |
+#           # Compute current UTC time
+#           TIMESTAMP=$(date --utc +'%H:%M')
+#           echo "Current UTC time is $TIMESTAMP"
+#           if [ "$TIMESTAMP" = "03:45" ]; then
+#             echo "mode=reset" >> $GITHUB_OUTPUT
+#           else
+#             echo "mode=update" >> $GITHUB_OUTPUT
+#           fi
 
-      - name: Run tracker
-        run: python oi_tracker.py ${{ steps.pick.outputs.mode }}
+#       - name: Run tracker
+#         run: python oi_tracker.py ${{ steps.pick.outputs.mode }}
