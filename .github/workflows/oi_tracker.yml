@@ -1,11 +1,13 @@
 name: OI Tracker
 
-# on:
-#   schedule:
-#     # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
-#     - cron: "45 3 * * *"
-#     # update OI every 5 minutes (all day)
-#     - cron: "*/5 * * * *"
+on:
+  schedule:
+    # reset ATM strikes each day at 9:15 AM IST → 03:45 UTC
+    - cron: "45 3 * * *"
+    # update OI every 5 minutes (all day)
+    - cron: "*/5 * * * *"
+  # (optional) allow manual runs for testing
+  workflow_dispatch: {}
 
 jobs:
   run:
@@ -33,11 +35,13 @@ jobs:
       - name: Determine task
         id: pick
         run: |
-          # At 03:45 UTC (09:15 IST) run reset; otherwise update
-          if [ "$(date --utc +'%H:%M')" = "03:45" ]; then
-            echo "::set-output name=mode::reset"
+          # Compute current UTC time
+          TIMESTAMP=$(date --utc +'%H:%M')
+          echo "Current UTC time is $TIMESTAMP"
+          if [ "$TIMESTAMP" = "03:45" ]; then
+            echo "mode=reset" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=mode::update"
+            echo "mode=update" >> $GITHUB_OUTPUT
           fi
 
       - name: Run tracker
